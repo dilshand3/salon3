@@ -1,0 +1,11 @@
+:root {
+  --primary: #4B5AFF;         /* Soft blue - primary action */
+  --secondary: #F6F8FE;       /* Light blue background */
+  --accent: #F25C66;          /* Coral pink - for attention */
+  --text: #1C1C1E;            /* Dark text */
+  --muted: #6C6C6E;           /* Muted/secondary text */
+  --border: #E4E7EB;          /* Border lines */
+  --background: #FFFFFF;      /* Main background */
+  --success: #3CCB7F;         /* For success states */
+  --error: #FF4D4F;           /* For error states */
+}

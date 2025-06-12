@@ -1,0 +1,41 @@
+.navbarContainer {
+    width: clamp(100%, 100%, 100%);
+    max-height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: calc( 1.2rem - 2.5px);
+    color: var(--text) !important;
+}
+
+.desktopNavbar {
+    display: none;
+    align-items: center;
+    font-size: 1.2rem;
+    gap: 20px;
+}
+
+.desktopMenu {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.navBox{
+    width: max-content;
+    padding: 9px 18px;
+    border: 0.1px solid var(--border);
+    border-radius: 34px;
+    cursor:pointer;
+}
+
+@media(min-width:767px) {
+    .desktopNavbar {
+        display: flex;
+    }
+
+    .mobileMenu {
+        display: none;
+    }
+}

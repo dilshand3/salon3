@@ -1,0 +1,24 @@
+@import url("./page.module.css");
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+}
+
+html,body{
+  width: 100%;
+  min-height: 100vh;
+  height: max-content;
+  font-size: 16px;
+  background-color: var(--background);
+  color: var(--text);
+  padding: 8px 9px 4px 9px;
+  font-family: 'Poppins', 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+}
+
+@media (min-width:900px){
+  body{
+    padding: 7px 16px 4px 16px;
+  }
+}
