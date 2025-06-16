@@ -1,0 +1,20 @@
+.forminput1Container{
+    display: flex;
+    border: 0.1px solid var(--border);
+    position: relative;
+}
+
+.forminput1Container>input{
+    border: none;
+    outline: none;
+    width: clamp(100%,100%,100%);
+    padding: 10px 8px;
+    border: 0.1px solid var(--border);
+}
+
+.forminput1Icon{
+  position: absolute;
+  top: 1.9px;
+  z-index: 10;
+  width: max-content;
+}

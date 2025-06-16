@@ -1,0 +1,13 @@
+.footerSectionContainer{
+    color: var(--text);
+}
+
+.footerSectionContainer>h4{
+    font-size: 1.1rem;
+}
+
+.footerSectionList{
+    list-style-type: none;
+    font-weight:500;
+}
+

@@ -1,0 +1,11 @@
+.heroContainer{
+    min-height: max-content;
+    height: 91vh;
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.heroTitle{
+    width: 90%;
+}

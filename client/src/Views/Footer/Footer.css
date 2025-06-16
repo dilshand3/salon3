@@ -1,0 +1,21 @@
+.footerContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 50px;
+    background-color: var(--greyBg);
+    width: 100%;
+    padding: 9px 9px 5px 24px;
+}
+
+.downloadAppBtn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 23px 8px 23px;
+    border-radius: 32px;
+    width: max-content;
+    border: 3px solid var(--border);
+    background-color: var(--background);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
