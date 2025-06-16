@@ -3,7 +3,8 @@ import mongoose, { Schema } from "mongoose";
 interface Iuser {
     _Id: mongoose.Types.ObjectId;
     email: string;
-    password? : string;
+    isVerified: boolean;
+    password?: string;
     name?: string;
     number?: string;
 }
@@ -14,14 +15,18 @@ const userSchema = new Schema<Iuser>({
         required: true,
         unique: true
     },
-    password : {
-      type : String,
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    password: {
+        type: String,
     },
     name: {
         type: String,
     },
-    number : {
-        type : String,
+    number: {
+        type: String,
     }
 }, {
     timestamps: true

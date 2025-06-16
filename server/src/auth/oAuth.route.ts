@@ -12,10 +12,6 @@ router.route("/google/callback").get(passport.authenticate("google", {
     failureRedirect: "/auth/failure",
 }),signUp);
 
-router.get("/success", (req, res) => {
-    res.send(" Google Auth successful!");
-});
-
 router.get("/failure", (req, res) => {
     res.send(" Google Auth failed.");
 });
