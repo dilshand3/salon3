@@ -39,3 +39,34 @@ export const signUp = async (req: Request, res: Response<IsignupRes>): Promise<a
         })
     }
 }
+
+interface IcompleteProfileReq {
+    name: string;
+    password: string;
+    number: string;
+}
+
+interface IcompleteProfileRes {
+    success: boolean;
+    message: string;
+    data?: object
+}
+
+export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>, res: Response<IcompleteProfileRes>): Promise<any> => {
+    try {
+        const { name, password, number } = req.body;
+        if (!name || !password || !number) {
+           return res.status(400).json({
+            success : false,
+            message : "All field required!"
+           })
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
