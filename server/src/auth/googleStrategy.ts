@@ -8,7 +8,6 @@ passport.use(new GoogleStrategy(
         callbackURL: process.env.GOOGLE_CALLBACK_URL!
     },
     function (accessToken: string, refreshToken: string, profile: any, done: any) {
-        console.log("Google profile:", profile);
         return done(null, profile);
     }
 ));

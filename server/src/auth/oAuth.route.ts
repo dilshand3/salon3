@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { signUp } from "../controller/user.controller";
 
 const router = Router();
 
@@ -9,8 +10,7 @@ router.route("/google").get(passport.authenticate("google", {
 
 router.route("/google/callback").get(passport.authenticate("google", {
     failureRedirect: "/auth/failure",
-    successRedirect: "/auth/success",
-}));
+}),signUp);
 
 router.get("/success", (req, res) => {
     res.send(" Google Auth successful!");
