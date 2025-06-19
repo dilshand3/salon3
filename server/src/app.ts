@@ -25,4 +25,7 @@ app.get("/", (req: Request, res: Response) => {
 import googleAuthRoute from "./auth/oAuth.route";
 app.use("/auth",googleAuthRoute);
 
+import userRoute from './routes/user.route';
+app.use("/api",userRoute);
+
 export { app }

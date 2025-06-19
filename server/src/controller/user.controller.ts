@@ -25,7 +25,7 @@ export const signUp = async (req: Request, res: Response<IsignupRes>): Promise<a
             email
         });
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "User created Successfully",
             data: {
@@ -64,15 +64,17 @@ export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>,
             })
         }
 
-        const hashedpassword = await bcrypt.hash(password,10)
+        const hashedpassword = await bcrypt.hash(password, 10)
 
-        const updatedUser = await User.findByIdAndUpdate(
+        const updatedUser = await User.findOneAndUpdate(
             { email },
             {
                 name,
-                password : hashedpassword,
-                number
-            }
+                password: hashedpassword,
+                number,
+                isVerified: true
+            },
+            { new: true }
         )
 
         if (!updatedUser) {
@@ -82,7 +84,7 @@ export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>,
             })
         }
 
-        res.status(200).json({ 
+        res.status(201).json({
             success: true,
             message: "Profile updated successfully",
             data: {
@@ -97,3 +99,4 @@ export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>,
         })
     }
 }
+
