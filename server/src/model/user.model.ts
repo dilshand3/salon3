@@ -27,6 +27,7 @@ const userSchema = new Schema<Iuser>({
     },
     number: {
         type: String,
+        unique : true
     }
 }, {
     timestamps: true

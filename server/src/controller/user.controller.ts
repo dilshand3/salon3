@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import { User } from "../model/user.model";
 import bcrypt from "bcryptjs";
 
-interface IsignupRes {
+interface IResponse {
     success: boolean;
     message: string;
     data?: object
 }
 
-export const signUp = async (req: Request, res: Response<IsignupRes>): Promise<any> => {
+export const signUp = async (req: Request, res: Response<IResponse>): Promise<any> => {
     try {
         const googleProfile: any = req.user;
         const email = googleProfile.emails[0].value;
@@ -48,13 +48,7 @@ interface IcompleteProfileReq {
     number: string;
 }
 
-interface IcompleteProfileRes {
-    success: boolean;
-    message: string;
-    data?: object
-}
-
-export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>, res: Response<IcompleteProfileRes>): Promise<any> => {
+export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>, res: Response<IResponse>): Promise<any> => {
     try {
         const { email, name, password, number } = req.body;
         if (!email || !name || !password || !number) {
@@ -100,3 +94,21 @@ export const completeProfile = async (req: Request<{}, {}, IcompleteProfileReq>,
     }
 }
 
+interface IloginReq {
+    email: string;
+    number: string;
+    password: string;
+}
+
+export const login = async (req: Request<{}, {}, IloginReq>, res: Response<IResponse>): Promise<any> => {
+    try {
+        const { email, number, password } = req.body;
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
