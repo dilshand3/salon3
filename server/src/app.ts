@@ -5,9 +5,13 @@ dotenv.config({
 import express, { Request, Response } from 'express';
 import session from 'express-session';
 import passport from 'passport';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import "./auth/googleStrategy";
 const app = express();
 
+app.use(cors());
+app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET!,
     resave: false,

@@ -4,7 +4,7 @@ import { Response } from 'express';
 export const generateTokenAndSetCookie = async (res: Response, userId: string): Promise<string> => {
     const sessionId = jwt.sign(
         { userId },
-        process.env.JWT_SECERET as string,
+        process.env.JWT_SECRET as string,
         {
             expiresIn: "7d"
         }

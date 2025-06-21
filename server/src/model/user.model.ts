@@ -33,4 +33,10 @@ const userSchema = new Schema<Iuser>({
     timestamps: true
 });
 
+userSchema.methods.toJSON = function () {
+    const userObject = this.toObject();
+    delete userObject.password;
+    return userObject;
+};
+
 export const User = mongoose.model<Iuser>("User", userSchema);
