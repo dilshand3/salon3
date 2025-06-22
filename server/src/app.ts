@@ -27,9 +27,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 import googleAuthRoute from "./auth/oAuth.route";
-app.use("/auth",googleAuthRoute);
+app.use("/auth", googleAuthRoute);
 
 import userRoute from './routes/user.route';
-app.use("/api",userRoute);
+app.use("/api", userRoute);
+
+import salonRoute from './routes/salon.route';
+app.use("/api", salonRoute);
 
 export { app }
