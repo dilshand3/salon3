@@ -13,7 +13,9 @@ interface Isalon extends Document {
     pinCode?: string;
     latitude?: number;
     longitude?: number;
-    contact?: string[];
+    number1?: string;
+    number2?: string;
+    email?: string;
     gallery?: string[];
     profilePhoto?: string;
     ServiceList?: mongoose.Types.ObjectId[];
@@ -75,10 +77,15 @@ const salonSchema = new Schema<Isalon>(
         longitude: {
             type: Number
         },
-        contact: [{
-            type: String,
-            default: []
-        }],
+        number1: {
+            type: String
+        },
+        number2: {
+            type: String
+        },
+        email: {
+            type: String
+        },
         gallery: [{
             type: String,
             default: []

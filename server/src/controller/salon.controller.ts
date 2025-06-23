@@ -6,6 +6,7 @@ import { generateTokenAndSetCookie } from "../utils/cookies";
 import { IauthnticatedRequest } from "../middlewares/verifyToken.middlware";
 import mongoose from "mongoose";
 import { getLatLongFromMap } from "../utils/getLocationOnMap";
+import { uploadOnCloudinary } from "../utils/cloudinary";
 
 interface IResponse {
     success: boolean;
@@ -137,3 +138,206 @@ export const AddSalonAddress = async (req: TaddSalonAddressReq, res: Response<IR
     }
 }
 
+export const uploadProfileImages = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(401).json({
+                success: false,
+                message: "Please provide Valid SalonId"
+            })
+            return;
+        }
+        let existedShop = await Salon.findById(salonId);
+        if (!existedShop) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+
+        const profileImg = req.file?.path as string;
+
+        if (!profileImg) {
+            res.status(500).json({
+                success: false,
+                message: "Profile Img required"
+            })
+            return;
+        }
+
+        const uploadResult = await uploadOnCloudinary(profileImg);
+
+        if (!uploadResult) {
+            res.status(500).json({
+                success: false,
+                message: "Profile Image didn't uploaded"
+            })
+            return;
+        }
+
+        const updatedSalon = await Salon.findByIdAndUpdate(
+            salonId,
+            { profilePhoto: uploadResult?.url },
+            { new: true }
+        );
+        if (!updatedSalon) {
+            res.status(404).json({
+                success: false,
+                message: "Something went wrong"
+            })
+            return;
+        }
+        res.status(200).json({
+            success: true,
+            message: "Profile photo uploaded successfully",
+            data: updatedSalon as object
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const uploadGalleryImgs = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(401).json({
+                success: false,
+                message: "Please provide Valid SalonId"
+            })
+            return;
+        }
+        let existedShop = await Salon.findById(salonId);
+        if (!existedShop) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+
+        const files = req.files as Express.Multer.File[];
+
+        if (!files || files.length < 3 || files.length > 6) {
+            res.status(400).json({
+                success: false,
+                message: "Minimum 3 and maximum 6 images are required"
+            });
+            return;
+        }
+
+        const galleryUrls: string[] = [];
+
+        for (const file of files) {
+            const result = await uploadOnCloudinary(file.path);
+            if (result?.url) {
+                galleryUrls.push(result.url);
+            }
+        }
+
+        if (galleryUrls.length < 3) {
+            res.status(500).json({
+                success: false,
+                message: "At least 3 images must be successfully uploaded"
+            });
+            return;
+        }
+
+        existedShop.gallery = [...(existedShop.gallery || []), ...galleryUrls];
+        await existedShop.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Gallery images uploaded successfully",
+            data: existedShop
+        });
+    } catch {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+interface IaddcontactReq {
+    number1?: string;
+    number2?: string;
+    email?: string;
+}
+
+type TcontactReq = IauthnticatedRequest & {
+    body?: IaddcontactReq
+}
+
+export const addContact = async (req: TcontactReq, res: Response<IResponse>): Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(401).json({
+                success: false,
+                message: "Please provide Valid SalonId"
+            })
+            return;
+        }
+        let existedShop = await Salon.findById(salonId);
+        if (!existedShop) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+        if (!req.body) {
+            res.status(400).json({
+                success: false,
+                message: "atleast one field required"
+            })
+            return;
+        }
+        const { number1, number2, email } = req.body;
+        
+        if (!number1 && !number2 && !email) {
+            res.status(400).json({
+                success: false,
+                message: "atleast one field required"
+            })
+            return;
+        }
+
+        const contactUpdate: Partial<IaddcontactReq> = {};
+        if (number1) contactUpdate.number1 = number1;
+        if (number2) contactUpdate.number2 = number2;
+        if (email) contactUpdate.email = email;
+
+        const updatedSalon = await Salon.findByIdAndUpdate(
+            salonId,
+            contactUpdate,
+            { new: true }
+        );
+
+        if (!updatedSalon) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Contact updated successfully",
+            data: updatedSalon
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
