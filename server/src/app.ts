@@ -35,4 +35,7 @@ app.use("/api", userRoute);
 import salonRoute from './routes/salon.route';
 app.use("/api", salonRoute);
 
+import serviceRoute from './routes/service.route';
+app.use("/api", serviceRoute);
+
 export { app }
