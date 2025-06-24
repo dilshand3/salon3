@@ -60,6 +60,44 @@ export const registerSalon = async (req: Request<{}, {}, IregsiterSalonReq>, res
     }
 }
 
+export const getSalonDetail = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(401).json({
+                success: false,
+                message: "Please provide Valid SalonId"
+            })
+            return;
+        }
+        const existedShop = await Salon.findById(salonId)
+            .populate("ServiceList")
+            .populate("workerList")
+            // .populate("review")
+            // .populate("follower");
+
+        if (!existedShop) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Salon detail fetched successfully",
+            data: existedShop
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
 interface IAddSalonAddressReq {
     address: string;
     city: string;
@@ -300,7 +338,7 @@ export const addContact = async (req: TcontactReq, res: Response<IResponse>): Pr
             return;
         }
         const { number1, number2, email } = req.body;
-        
+
         if (!number1 && !number2 && !email) {
             res.status(400).json({
                 success: false,
@@ -333,8 +371,96 @@ export const addContact = async (req: TcontactReq, res: Response<IResponse>): Pr
             message: "Contact updated successfully",
             data: updatedSalon
         });
-    } catch (error) {
-        console.log(error)
+    } catch {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+interface IsocialLinks {
+    instagram: string,
+    facebook: string,
+    youtube: string,
+    website: string
+}
+
+type TsocialLinks = IauthnticatedRequest & {
+    body?: IsocialLinks
+}
+
+export const addSocialLinks = async (req: TsocialLinks, res: Response<IResponse>): Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(401).json({
+                success: false,
+                message: "Please provide Valid SalonId"
+            })
+            return;
+        }
+        let existedShop = await Salon.findById(salonId);
+        if (!existedShop) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+        if (!req.body) {
+            res.status(400).json({
+                success: false,
+                message: "atleast one field required"
+            })
+            return;
+        }
+
+         const { instagram, facebook, youtube, website } = req.body;
+
+        // Check at least one field is present
+        if (!instagram && !facebook && !youtube && !website) {
+             res.status(400).json({
+                success: false,
+                message: "At least one social link is required"
+            })
+            return;
+        }
+
+        // Prepare update object
+        const socialLinksUpdate: Partial<IsocialLinks> = {};
+        if (instagram) socialLinksUpdate.instagram = instagram;
+        if (facebook) socialLinksUpdate.facebook = facebook;
+        if (youtube) socialLinksUpdate.youtube = youtube;
+        if (website) socialLinksUpdate.website = website;
+
+        // Update only provided fields
+        const updatedSalon = await Salon.findByIdAndUpdate(
+            salonId,
+            { $set: { 
+                // Use dot notation to update nested fields
+                ...(instagram && { "socialLinks.instagram": instagram }),
+                ...(facebook && { "socialLinks.facebook": facebook }),
+                ...(youtube && { "socialLinks.youtube": youtube }),
+                ...(website && { "socialLinks.website": website }),
+            }},
+            { new: true }
+        );
+
+        if (!updatedSalon) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Social links updated successfully",
+            data: updatedSalon.socialLinks
+        });
+    } catch {
         res.status(500).json({
             success: false,
             message: "Internal Server Error"

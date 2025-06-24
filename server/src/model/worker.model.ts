@@ -14,7 +14,6 @@ const workerSchema = new Schema<Iworker>({
     },
     avatar: {
         type: String,
-        required: true
     },
     spcelization: {
         type: String,

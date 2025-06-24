@@ -38,4 +38,7 @@ app.use("/api", salonRoute);
 import serviceRoute from './routes/service.route';
 app.use("/api", serviceRoute);
 
+import workerRoute from './routes/worker.route';
+app.use("/api",workerRoute);
+
 export { app }

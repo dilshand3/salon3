@@ -108,21 +108,14 @@ export const deleteService = async (req: IauthnticatedRequest, res: Response<Ire
             })
             return;
         }
-        const{ serviceId} = req.params;
+        const { serviceId } = req.params;
         if (!serviceId || !mongoose.isValidObjectId) {
             res.status(403).json({
                 success: false,
                 message: "Please provide a valid Id"
             })
         }
-       const deletedService = await Service.findByIdAndDelete(serviceId);
-        if (!deletedService) {
-            res.status(404).json({
-                success: false,
-                message: "Service not found"
-            })
-            return;
-        }
+        await Service.findByIdAndDelete(serviceId);
 
         if (existedShop.ServiceList) {
             existedShop.ServiceList = existedShop.ServiceList.filter(
@@ -131,7 +124,11 @@ export const deleteService = async (req: IauthnticatedRequest, res: Response<Ire
             await existedShop.save();
         }
 
-         
+        res.status(200).json({
+            success : true,
+            message : "Service deleted Successfully"
+        })
+
     } catch (error) {
         res.status(500).json({
             success: false,
