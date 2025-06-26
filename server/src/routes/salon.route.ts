@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { AddSalonAddress, registerSalon,uploadProfileImages,uploadGalleryImgs, addContact, addSocialLinks } from "../controller/salon.controller";
+import { AddSalonAddress, registerSalon,uploadProfileImages,uploadGalleryImgs, addContact, addSocialLinks, salonLogin } from "../controller/salon.controller";
 import { VerifyToken } from "../middlewares/verifyToken.middlware";
 import { upload } from "../middlewares/multer.middleware";
 const router = Router();
 
 router.route("/shop/registerShop").post(registerSalon);
+router.route("/shop/login").post(salonLogin);
 router.route("/shop/Addaddress").put(VerifyToken,AddSalonAddress);
 router.route("/shop/uploadProfileImg").post(
     VerifyToken,

@@ -78,7 +78,7 @@ export const addReview = async (req: TaddReviewReq, res: Response<Iresponse>): P
         res.status(201).json({
             success: true,
             message: "Review Created Successfull",
-            data : createReview
+            data: createReview
         })
     } catch (error) {
         res.status(500).json({
@@ -88,19 +88,40 @@ export const addReview = async (req: TaddReviewReq, res: Response<Iresponse>): P
     }
 }
 
-export const deleteReview = async (req : IauthnticatedRequest,res : Response<Iresponse>):Promise<void> =>{
+export const deleteReview = async (req: IauthnticatedRequest, res: Response<Iresponse>): Promise<void> => {
     try {
         const userId = req.userId;
-        if (!userId || !mongoose.isValidObjectId(userId)) {
+        const { reviewId } = req.params;
+        if (!reviewId || !userId || !mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(reviewId)) {
             res.status(400).json({
-                success : false,
-                message : "valid Id required"
+                success: false,
+                message: "valid Id required"
             })
+            return;
         }
+
+        const review = await Review.findByIdAndDelete(reviewId);
+        if (!review) {
+            res.status(404).json({
+                success: false,
+                message: "Review not found"
+            })
+            return
+        }
+
+        await Promise.all([
+            User.findByIdAndUpdate(review.user, { $pull: { review: reviewId } }),
+            Salon.findByIdAndUpdate(review.salon, { $pull: { review: reviewId } })
+        ]);
+
+        res.status(200).json({
+            success: true,
+            message: "Review deleted successfully"
+        });
     } catch (error) {
         res.status(500).json({
-            success : false,
-            message : "Internal Server Error"
+            success: false,
+            message: "Internal Server Error"
         })
     }
 }

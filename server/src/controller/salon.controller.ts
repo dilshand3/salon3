@@ -73,8 +73,8 @@ export const getSalonDetail = async (req: IauthnticatedRequest, res: Response<IR
         const existedShop = await Salon.findById(salonId)
             .populate("ServiceList")
             .populate("workerList")
-            // .populate("review")
-            // .populate("follower");
+        // .populate("review")
+        // .populate("follower");
 
         if (!existedShop) {
             res.status(404).json({
@@ -169,6 +169,53 @@ export const AddSalonAddress = async (req: TaddSalonAddressReq, res: Response<IR
         })
     } catch (error) {
         console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+interface IsalonLoginReq {
+    shopId: string;
+    password: string;
+}
+
+export const salonLogin = async (req: Request<IsalonLoginReq>, res: Response<IResponse>): Promise<void> => {
+    try {
+        const { shopId, password } = req.body;
+        if (!shopId || !password) {
+            res.status(400).json({
+                success: false,
+                message: "All fied required"
+            })
+            return;
+        }
+        const salon = await Salon.findOne({ shopId });
+        if (!salon) {
+            res.status(404).json({
+                success: false,
+                message: "Shop not found"
+            })
+            return;
+        }
+
+        const isMatch = await bcrypt.compare(password, salon.password);
+        if (!isMatch) {
+            res.status(400).json({
+                success: false,
+                message: "Invalid password"
+            })
+            return;
+        }
+        await generateTokenAndSetCookie(res, salon._id.toString());
+
+        res.status(200).json({
+            success: true,
+            message: "Login successfully",
+            data: salon
+        });
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
@@ -416,11 +463,11 @@ export const addSocialLinks = async (req: TsocialLinks, res: Response<IResponse>
             return;
         }
 
-         const { instagram, facebook, youtube, website } = req.body;
+        const { instagram, facebook, youtube, website } = req.body;
 
         // Check at least one field is present
         if (!instagram && !facebook && !youtube && !website) {
-             res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "At least one social link is required"
             })
@@ -437,13 +484,15 @@ export const addSocialLinks = async (req: TsocialLinks, res: Response<IResponse>
         // Update only provided fields
         const updatedSalon = await Salon.findByIdAndUpdate(
             salonId,
-            { $set: { 
-                // Use dot notation to update nested fields
-                ...(instagram && { "socialLinks.instagram": instagram }),
-                ...(facebook && { "socialLinks.facebook": facebook }),
-                ...(youtube && { "socialLinks.youtube": youtube }),
-                ...(website && { "socialLinks.website": website }),
-            }},
+            {
+                $set: {
+                    // Use dot notation to update nested fields
+                    ...(instagram && { "socialLinks.instagram": instagram }),
+                    ...(facebook && { "socialLinks.facebook": facebook }),
+                    ...(youtube && { "socialLinks.youtube": youtube }),
+                    ...(website && { "socialLinks.website": website }),
+                }
+            },
             { new: true }
         );
 
