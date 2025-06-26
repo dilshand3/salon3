@@ -39,6 +39,9 @@ import serviceRoute from './routes/service.route';
 app.use("/api", serviceRoute);
 
 import workerRoute from './routes/worker.route';
-app.use("/api",workerRoute);
+app.use("/api", workerRoute);
+
+import reviewRoute from './routes/review.route';
+app.use("/api", reviewRoute);
 
 export { app }

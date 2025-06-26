@@ -1,10 +1,11 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema , Document } from "mongoose";
 
-interface Iuser {
-    _Id: mongoose.Types.ObjectId;
+interface Iuser extends Document {
+    _id: mongoose.Types.ObjectId;
     email: string;
     isVerified: boolean;
     password?: string;
+    review? : mongoose.Types.ObjectId[];
     name?: string;
     number?: string;
 }
@@ -28,7 +29,11 @@ const userSchema = new Schema<Iuser>({
     number: {
         type: String,
         unique: true
-    }
+    },
+    review : [{
+        type : mongoose.Types.ObjectId,
+        ref : "Review"
+    }]
 }, {
     timestamps: true
 });

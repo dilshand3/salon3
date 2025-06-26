@@ -106,12 +106,12 @@ interface IloginReq {
 export const login = async (req: Request<{}, {}, IloginReq>, res: Response<IResponse>): Promise<void> => {
     try {
         const { email, number, password } = req.body;
-
         if ((!email && !number) || !password) {
             res.status(400).json({
                 success: false,
                 message: "Email or number required"
             })
+            return;
         }
 
         const user = await User.findOne(email ? { email } : { number });
@@ -121,6 +121,7 @@ export const login = async (req: Request<{}, {}, IloginReq>, res: Response<IResp
                 success: false,
                 message: "User not found"
             })
+            return;
         }
 
         const isMatch = await bcrypt.compare(password, user?.password!);
@@ -129,7 +130,8 @@ export const login = async (req: Request<{}, {}, IloginReq>, res: Response<IResp
             res.status(400).json({
                 success: false,
                 message: "Invalid password"
-            });
+            })
+            return;
         }
 
         await generateTokenAndSetCookie(res, user?._id.toString() as string)

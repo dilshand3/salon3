@@ -91,3 +91,83 @@ export const addWorker = async (req: TaddWorker, res: Response<Iresponse>): Prom
         })
     }
 }
+
+export const updateAvatar = async (req: Request, res: Response<Iresponse>): Promise<void> => {
+    try {
+        const { workerId } = req.params;
+
+        if (!workerId || !mongoose.isValidObjectId(workerId)) {
+            res.status(400).json({
+                success: false,
+                message: "Valid workerId required"
+            });
+            return;
+        }
+
+        const worker = await Worker.findById(workerId);
+
+        if (!worker) {
+            res.status(404).json({
+                success: false,
+                message: "Worker not found"
+            });
+            return;
+        }
+
+        if (!req.file || !req.file.path) {
+            res.status(400).json({
+                success: false,
+                message: "Avatar file is required"
+            });
+            return;
+        }
+
+        const uploadedAvatar = await uploadOnCloudinary(req.file.path);
+        if (!uploadedAvatar?.url) {
+            res.status(500).json({
+                success: false,
+                message: "Avatar upload failed"
+            });
+            return;
+        }
+
+        worker.avatar = uploadedAvatar.url;
+        await worker.save();
+        res.status(200).json({
+            success: true,
+            message: "Avatar updated successfully",
+            data: { avatar: worker.avatar }
+        });
+
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const deleteWorker = async (req: Request, res: Response<Iresponse>): Promise<void> => {
+    try {
+        const { workerId } = req.params;
+        if (!workerId || !mongoose.isValidObjectId(workerId)) {
+            res.status(400).json({
+                success: false,
+                message: "Valid workerId required"
+            });
+            return;
+        }
+
+        await Worker.findByIdAndDelete(workerId);
+        res.status(200).json({
+            success: false,
+            message: "Worker Remove successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
