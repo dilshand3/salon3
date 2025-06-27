@@ -153,4 +153,4 @@ salonSchema.methods.toJSON = function () {
     return salonObject;
 };
 
-export const Salon = mongoose.model<Isalon>("Salone", salonSchema);
+export const Salon = mongoose.model<Isalon>("Salon", salonSchema);

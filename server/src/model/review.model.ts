@@ -18,7 +18,7 @@ const reviewSchema = new Schema<Ireview>({
     },
     salon: {
         type: Schema.Types.ObjectId,
-        ref: "Salone",
+        ref: "Salon",
         required: true
     },
     starRating: {

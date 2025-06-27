@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/cookies";
 import { IauthnticatedRequest } from "../middlewares/verifyToken.middlware";
 import mongoose from "mongoose";
+import { Salon } from "../model/salon.model";
 
 interface IResponse {
     success: boolean;
@@ -198,6 +199,110 @@ export const logOut = async (req: IauthnticatedRequest, res: Response<IResponse>
         res.status(200).json({ success: true, message: "Logged out successfully" });
     } catch {
         res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const followSalon = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const userId = req.userId;
+        const { salonId } = req.params;
+        if (!salonId || !userId || !mongoose.isValidObjectId || !mongoose.isValidObjectId(userId)) {
+            res.status(401).json({
+                success: false,
+                message: "Valid Id required"
+            })
+            return;
+        }
+
+        await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { following: salonId } }
+        )
+
+        await Salon.findByIdAndUpdate(
+            salonId,
+            { $addToSet: { follower: userId } }
+        )
+        res.status(200).json({
+            success: true,
+            message: "Salon followed successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const unFolloSalon = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const userId = req.userId;
+        const { salonId } = req.params;
+        if (!salonId || !userId || !mongoose.isValidObjectId || !mongoose.isValidObjectId(userId)) {
+            res.status(401).json({
+                success: false,
+                message: "Valid Id required"
+            })
+            return;
+        }
+
+      await User.findByIdAndUpdate(
+        userId,
+        {
+            $pull : {
+                following : salonId
+            }
+        }
+      )
+      await Salon.findByIdAndUpdate(
+        salonId,
+        {
+            $pull : {
+                follower : userId
+            }
+        }
+      )
+      res.status(200).json({
+        success : true,
+        message : "Salon unfollowed successfully"
+      })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const getUserFollowingList = async ( req : IauthnticatedRequest,res : Response<IResponse>):Promise<void>=> {
+    try {
+        const userId = req.userId;
+        if (!userId || !mongoose.isValidObjectId) {
+            res.status(401).json({
+                success :false,
+                message : "Valid UserId required"
+            })
+            return;
+        }
+        const existedUser = await User.findById(userId).populate("following");
+        if (!existedUser) {
+            res.status(404).json({
+                success : false,
+                message : "Following List not found"
+            })
+        }
+        res.status(200).json({
+            success : true,
+            message : "Following List fetched successfully",
+            data : existedUser as object
+        })
+    } catch (error) {
+        console.log(error)
+         res.status(500).json({
             success: false,
             message: "Internal Server Error"
         })

@@ -8,6 +8,7 @@ interface Iuser extends Document {
     review? : mongoose.Types.ObjectId[];
     name?: string;
     number?: string;
+    following? : mongoose.Types.ObjectId[];
 }
 
 const userSchema = new Schema<Iuser>({
@@ -33,6 +34,10 @@ const userSchema = new Schema<Iuser>({
     review : [{
         type : mongoose.Types.ObjectId,
         ref : "Review"
+    }],
+    following : [{
+        type : mongoose.Types.ObjectId,
+        ref : "Salon"
     }]
 }, {
     timestamps: true

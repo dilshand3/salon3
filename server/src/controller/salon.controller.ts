@@ -73,8 +73,8 @@ export const getSalonDetail = async (req: IauthnticatedRequest, res: Response<IR
         const existedShop = await Salon.findById(salonId)
             .populate("ServiceList")
             .populate("workerList")
-        // .populate("review")
-        // .populate("follower");
+            .populate("review")
+            .populate("follower");
 
         if (!existedShop) {
             res.status(404).json({
