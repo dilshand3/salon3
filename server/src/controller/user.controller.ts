@@ -294,6 +294,7 @@ export const getUserFollowingList = async ( req : IauthnticatedRequest,res : Res
                 success : false,
                 message : "Following List not found"
             })
+            return;
         }
         res.status(200).json({
             success : true,

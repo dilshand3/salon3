@@ -307,6 +307,7 @@ export const uploadGalleryImgs = async (req: IauthnticatedRequest, res: Response
         }
 
         const files = req.files as Express.Multer.File[];
+        console.log(req.files)
 
         if (!files || files.length < 3 || files.length > 6) {
             res.status(400).json({
@@ -513,6 +514,36 @@ export const addSocialLinks = async (req: TsocialLinks, res: Response<IResponse>
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
+        })
+    }
+}
+
+export const followerList = async (req : IauthnticatedRequest,res : Response<IResponse>):Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(400).json({
+                success : false,
+                message : "Valid Id required"
+            })
+            return;
+        }
+        const SalonFollowerList = await Salon.findById(salonId).populate("follower");
+        if (!SalonFollowerList) {
+            res.status(404).json({
+                success : false,
+                message : "No follower found"
+            })
+        }
+        res.status(200).json({
+            success : true,
+            message : "Follower list feteched successfully",
+            data : SalonFollowerList as object
+        })
+    } catch (error) {
+        res.status(500).json({
+            success : false,
+            message : "Internal Server Error"
         })
     }
 }
