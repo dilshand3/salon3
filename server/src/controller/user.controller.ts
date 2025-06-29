@@ -288,7 +288,10 @@ export const getUserFollowingList = async ( req : IauthnticatedRequest,res : Res
             })
             return;
         }
-        const existedUser = await User.findById(userId).populate("following");
+        const existedUser = await User.findById(userId).populate({
+            path : "following",
+            select : "shopName city profilePhoto"
+        });
         if (!existedUser) {
             res.status(404).json({
                 success : false,
@@ -299,7 +302,7 @@ export const getUserFollowingList = async ( req : IauthnticatedRequest,res : Res
         res.status(200).json({
             success : true,
             message : "Following List fetched successfully",
-            data : existedUser as object
+            data : existedUser.following as object
         })
     } catch (error) {
         console.log(error)

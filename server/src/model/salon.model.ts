@@ -4,6 +4,7 @@ interface Isalon extends Document {
     _id: mongoose.Types.ObjectId;
     shopName: string;
     isVerified: boolean;
+    isOpen: string;
     shopId: string;
     number: string;
     password: string;
@@ -45,6 +46,11 @@ const salonSchema = new Schema<Isalon>(
         isVerified: {
             type: Boolean,
             default: false
+        },
+        isOpen: {
+            type: String,
+            enum: ["open", "closed", "busy", "maintenance"],
+            default: "closed"
         },
         shopId: {
             type: String,

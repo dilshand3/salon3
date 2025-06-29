@@ -181,6 +181,62 @@ interface IsalonLoginReq {
     password: string;
 }
 
+interface IautoUpdateShopStatusReq {
+    isOpen: string;
+}
+
+type TtoggleShopOpen = IauthnticatedRequest & {
+    body?: IautoUpdateShopStatusReq
+}
+
+export const UpdateShopStatus = async (req: TtoggleShopOpen, res: Response<IResponse>): Promise<void> => {
+    try {
+        const salonId = req.userId;
+        if (!salonId || !mongoose.isValidObjectId(salonId)) {
+            res.status(400).json({
+                success: false,
+                message: "Valid Id required"
+            })
+            return;
+        }
+        if (!req.body) {
+            res.status(400).json({
+                success: false,
+                message: "all field required"
+            })
+            return;
+        }
+        const { isOpen } = req.body;
+        if(!isOpen){
+            res.status(400).json({
+                success : false,
+                message : "All field required"
+            })
+            return;
+        }
+        const existedSalon = await Salon.findById(salonId);
+        if (!existedSalon) {
+            res.status(404).json({
+                success: false,
+                message: "Shop not found"
+            })
+            return;
+        }
+        existedSalon.isOpen = isOpen;
+        await existedSalon.save();
+        res.status(200).json({
+            success : true,
+            message : "Shop status updatad successfully",
+            data : existedSalon
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Interval Server Error"
+        })
+    }
+}
+
 export const salonLogin = async (req: Request<IsalonLoginReq>, res: Response<IResponse>): Promise<void> => {
     try {
         const { shopId, password } = req.body;
@@ -518,32 +574,32 @@ export const addSocialLinks = async (req: TsocialLinks, res: Response<IResponse>
     }
 }
 
-export const followerList = async (req : IauthnticatedRequest,res : Response<IResponse>):Promise<void> => {
+export const followerList = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
     try {
         const salonId = req.userId;
         if (!salonId || !mongoose.isValidObjectId(salonId)) {
             res.status(400).json({
-                success : false,
-                message : "Valid Id required"
+                success: false,
+                message: "Valid Id required"
             })
             return;
         }
         const SalonFollowerList = await Salon.findById(salonId).populate("follower");
         if (!SalonFollowerList) {
             res.status(404).json({
-                success : false,
-                message : "No follower found"
+                success: false,
+                message: "No follower found"
             })
         }
         res.status(200).json({
-            success : true,
-            message : "Follower list feteched successfully",
-            data : SalonFollowerList as object
+            success: true,
+            message: "Follower list feteched successfully",
+            data: SalonFollowerList?.follower as object
         })
     } catch (error) {
         res.status(500).json({
-            success : false,
-            message : "Internal Server Error"
+            success: false,
+            message: "Internal Server Error"
         })
     }
 }
