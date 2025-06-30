@@ -20,6 +20,6 @@ router.route("/shop/uploadGalleryImg").post(
 router.route("/shop/contact").post(VerifyToken,addContact);
 router.route("/shop/addSocialLinks").post(VerifyToken,addSocialLinks);
 router.route("/shop/followerList").get(VerifyToken,followerList);
-router.route("/shop/updateSalonStatus").get(VerifyToken,UpdateShopStatus);
+router.route("/shop/updateSalonStatus").post(VerifyToken,UpdateShopStatus);
 
 export default router;

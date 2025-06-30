@@ -74,7 +74,6 @@ export const getSalonDetail = async (req: IauthnticatedRequest, res: Response<IR
             .populate("ServiceList")
             .populate("workerList")
             .populate("review")
-            .populate("follower");
 
         if (!existedShop) {
             res.status(404).json({
@@ -207,10 +206,10 @@ export const UpdateShopStatus = async (req: TtoggleShopOpen, res: Response<IResp
             return;
         }
         const { isOpen } = req.body;
-        if(!isOpen){
+        if (!isOpen) {
             res.status(400).json({
-                success : false,
-                message : "All field required"
+                success: false,
+                message: "All field required"
             })
             return;
         }
@@ -225,9 +224,11 @@ export const UpdateShopStatus = async (req: TtoggleShopOpen, res: Response<IResp
         existedSalon.isOpen = isOpen;
         await existedSalon.save();
         res.status(200).json({
-            success : true,
-            message : "Shop status updatad successfully",
-            data : existedSalon
+            success: true,
+            message: "Shop status updatad successfully",
+            data: {
+                SalonStatus: existedSalon.isOpen
+            }
         })
     } catch (error) {
         res.status(500).json({
