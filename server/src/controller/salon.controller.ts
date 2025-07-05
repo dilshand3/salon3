@@ -585,7 +585,10 @@ export const followerList = async (req: IauthnticatedRequest, res: Response<IRes
             })
             return;
         }
-        const SalonFollowerList = await Salon.findById(salonId).populate("follower");
+        const SalonFollowerList = await Salon.findById(salonId).populate({
+            path: "follower",
+            select: "name"
+        });
         if (!SalonFollowerList) {
             res.status(404).json({
                 success: false,
