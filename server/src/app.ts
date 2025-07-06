@@ -44,4 +44,7 @@ app.use("/api", workerRoute);
 import reviewRoute from './routes/review.route';
 app.use("/api", reviewRoute);
 
+import bookingRoute from "./routes/booking.route";
+app.use("/api", bookingRoute);
+
 export { app }
