@@ -66,6 +66,14 @@ export const bookAppointment = async (req: TbookAppointment, res: Response<Iresp
             time,
             note
         });
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $push : {
+                    appointments : createAppointment._id
+                }
+            }
+        )
         if (!createAppointment) {
             res.status(404).json({
                 success : false,

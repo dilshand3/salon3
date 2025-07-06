@@ -305,8 +305,29 @@ export const getUserFollowingList = async ( req : IauthnticatedRequest,res : Res
             data : existedUser.following as object
         })
     } catch (error) {
-        console.log(error)
          res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const getUserAppointmentsList = async (req : IauthnticatedRequest,res : Response<IResponse>):Promise<void>=> {
+    try {
+        const userId = req.userId;
+        if (!userId || !mongoose.isValidObjectId(userId)) {
+            res.status(400).json({
+                success : false,
+                message : "Valid UserId required"
+            })
+            return;
+        }
+        const existedUser = await User.findById(userId).populate({
+            path : "Booking",
+            select : "appointments"
+        })
+    } catch (error) {
+        res.status(500).json({
             success: false,
             message: "Internal Server Error"
         })
