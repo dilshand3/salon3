@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const ProfileScreen : React.FC = () => {
     const insets = useSafeAreaInsets();
   return (
-    <View style={[sty]}>
+    <View style={[]}>
       <Text>ProfileScreen</Text>
     </View>
   )
