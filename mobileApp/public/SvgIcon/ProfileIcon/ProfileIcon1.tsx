@@ -1,0 +1,18 @@
+import * as React from "react";
+import Svg, { Path } from "react-native-svg";
+
+const ProfileIcon1: React.FC = () => (
+    <Svg
+        width={44}
+        height={44}
+        fill="none"
+        viewBox="0 0 24 24"
+    >
+        <Path
+            stroke="currentColor"
+            strokeWidth={2}
+            d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        />
+    </Svg>
+);
+export default ProfileIcon1;
