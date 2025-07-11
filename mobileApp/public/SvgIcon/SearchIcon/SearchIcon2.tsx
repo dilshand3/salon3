@@ -2,9 +2,9 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 const SearchIcon2 : React.FC = () => (
   <Svg
-    width={44}
-    height={44}
-    fill="currentColor"
+    width={30}
+    height={30}
+    fill="white"
     viewBox="0 0 24 24"
   >
     <Path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" />

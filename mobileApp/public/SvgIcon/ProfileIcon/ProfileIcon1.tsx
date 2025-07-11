@@ -3,8 +3,8 @@ import Svg, { Path } from "react-native-svg";
 
 const ProfileIcon1: React.FC = () => (
     <Svg
-        width={44}
-        height={44}
+        width={37}
+        height={37}
         fill="none"
         viewBox="0 0 24 24"
     >

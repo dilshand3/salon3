@@ -3,9 +3,9 @@ import Svg, { Path } from "react-native-svg";
 
 const ProfileIcon2: React.FC = () => (
     <Svg
-    width={44}
-    height={44}
-    fill="currentColor"
+    width={32}
+    height={32}
+    fill="white"
     viewBox="0 0 24 24"
   >
     <Path

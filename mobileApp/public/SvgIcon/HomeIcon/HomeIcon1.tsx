@@ -3,8 +3,8 @@ import Svg, { G, Path } from "react-native-svg";
 
 const HomeIcon1: React.FC = () => (
   <Svg
-    width={44}
-    height={44}
+    width={36}
+    height={36}
     fill="none"
     viewBox="0 0 24 24"
   >

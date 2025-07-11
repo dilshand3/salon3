@@ -2,15 +2,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const ProfileScreen : React.FC = () => {
+const DiscoverScreen : React.FC = () => {
     const insets = useSafeAreaInsets();
   return (
     <View style={{paddingTop : insets.top}}>
-      <Text>ProfileScreen</Text>
+      <Text>DiscoverScreen</Text>
     </View>
   )
 }
 
-export default ProfileScreen;
+export default DiscoverScreen;
 
 const styles = StyleSheet.create({})
