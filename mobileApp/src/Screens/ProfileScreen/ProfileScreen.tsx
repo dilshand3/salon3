@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View,StatusBar } from 'react-native'
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,6 +7,10 @@ const ProfileScreen : React.FC = () => {
   return (
     <View style={{paddingTop : insets.top}}>
       <Text>ProfileScreen</Text>
+       <StatusBar
+          animated={true}
+          backgroundColor="#61dafb"
+        />
     </View>
   )
 }
