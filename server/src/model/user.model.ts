@@ -10,6 +10,7 @@ interface Iuser extends Document {
     number?: string;
     following? : mongoose.Types.ObjectId[];
     appointments? : mongoose.Types.ObjectId[];
+    recentlyVisitedShop? : mongoose.Types.ObjectId[];
 }
 
 const userSchema = new Schema<Iuser>({
@@ -43,7 +44,11 @@ const userSchema = new Schema<Iuser>({
     appointments:[{
         type : Schema.Types.ObjectId,
         ref : "Booking"
-    }] 
+    }] ,
+    recentlyVisitedShop : [{
+        type :Schema.Types.ObjectId,
+        ref : "Salon"
+    }]
 }, {
     timestamps: true
 });

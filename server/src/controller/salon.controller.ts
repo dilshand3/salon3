@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Salon } from "../model/salon.model";
+import { User } from "../model/user.model";
 import { generateShopId } from "../utils/shopId";
 import bcrypt from 'bcryptjs';
 import { generateTokenAndSetCookie } from "../utils/cookies";
@@ -599,6 +600,53 @@ export const followerList = async (req: IauthnticatedRequest, res: Response<IRes
             success: true,
             message: "Follower list feteched successfully",
             data: SalonFollowerList?.follower as object
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const addRecentlyVisitedShop = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const { salonId } = req.params;
+        const userId = req.userId;
+        if (!userId || !salonId || !mongoose.isValidObjectId(salonId) || !mongoose.isValidObjectId(userId)) {
+            res.status(400).json({
+                success: false,
+                message: "Valid Id required"
+            })
+            return;
+        }
+        const existedSalon = await Salon.findById(salonId);
+        if (!existedSalon) {
+            res.status(404).json({
+                success: false,
+                message: "Salon not found"
+            })
+            return;
+        }
+        const existedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                $push: {
+                    recentlyVisitedShop: existedSalon._id
+                }
+            }
+        );
+        if (!existedUser) {
+            res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+            return;
+        }
+        res.status(200).json({
+            success: true,
+            message: "Salon featched successfully",
+            data: existedSalon
         })
     } catch (error) {
         res.status(500).json({

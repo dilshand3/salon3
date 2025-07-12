@@ -250,26 +250,26 @@ export const unFolloSalon = async (req: IauthnticatedRequest, res: Response<IRes
             return;
         }
 
-      await User.findByIdAndUpdate(
-        userId,
-        {
-            $pull : {
-                following : salonId
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $pull: {
+                    following: salonId
+                }
             }
-        }
-      )
-      await Salon.findByIdAndUpdate(
-        salonId,
-        {
-            $pull : {
-                follower : userId
+        )
+        await Salon.findByIdAndUpdate(
+            salonId,
+            {
+                $pull: {
+                    follower: userId
+                }
             }
-        }
-      )
-      res.status(200).json({
-        success : true,
-        message : "Salon unfollowed successfully"
-      })
+        )
+        res.status(200).json({
+            success: true,
+            message: "Salon unfollowed successfully"
+        })
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -278,58 +278,92 @@ export const unFolloSalon = async (req: IauthnticatedRequest, res: Response<IRes
     }
 }
 
-export const getUserFollowingList = async ( req : IauthnticatedRequest,res : Response<IResponse>):Promise<void>=> {
+export const getUserFollowingList = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
     try {
         const userId = req.userId;
         if (!userId || !mongoose.isValidObjectId) {
             res.status(401).json({
-                success :false,
-                message : "Valid UserId required"
+                success: false,
+                message: "Valid UserId required"
             })
             return;
         }
         const existedUser = await User.findById(userId).populate({
-            path : "following",
-            select : "shopName city profilePhoto"
+            path: "following",
+            select: "shopName city profilePhoto"
         });
         if (!existedUser) {
             res.status(404).json({
-                success : false,
-                message : "Following List not found"
+                success: false,
+                message: "Following List not found"
             })
             return;
         }
         res.status(200).json({
-            success : true,
-            message : "Following List fetched successfully",
-            data : existedUser.following as object
+            success: true,
+            message: "Following List fetched successfully",
+            data: existedUser.following as object
         })
     } catch (error) {
-         res.status(500).json({
+        res.status(500).json({
             success: false,
             message: "Internal Server Error"
         })
     }
 }
 
-export const getUserAppointmentsList = async (req : IauthnticatedRequest,res : Response<IResponse>):Promise<void>=> {
+export const getUserAppointmentsList = async (req: IauthnticatedRequest, res: Response<IResponse>): Promise<void> => {
+    try {
+        const userId = req.userId;
+        if (!userId || !mongoose.isValidObjectId(userId)) {
+            res.status(400).json({
+                success: false,
+                message: "Valid UserId required"
+            })
+            return;
+        }
+        const existedUser = await User.findById(userId).populate({
+            path: "Booking",
+            select: "appointments"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const TotalVisitedShopList = async (req : IauthnticatedRequest, res :Response<IResponse>):Promise<void> => {
     try {
         const userId = req.userId;
         if (!userId || !mongoose.isValidObjectId(userId)) {
             res.status(400).json({
                 success : false,
-                message : "Valid UserId required"
+                message : "Valid User Id required"
             })
             return;
         }
         const existedUser = await User.findById(userId).populate({
-            path : "Booking",
-            select : "appointments"
-        })
-    } catch (error) {
+            path: "recentlyVisitedShop",
+            select: "name profilePhoto totalRating address"
+        });
+        if (!existedUser) {
+            res.status(404).json({
+                success : false,
+                message : "User not found"
+            })
+            return;
+        }
+        res.status(200).json({
+            success : true,
+            message : "User Visited shop fetched successfully",
+            data : existedUser.recentlyVisitedShop
+        });
+    } catch {
         res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+            success : false,
+            message : "Internal Server Error"
         })
     }
 }
