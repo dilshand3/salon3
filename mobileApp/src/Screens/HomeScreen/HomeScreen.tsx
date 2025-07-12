@@ -7,6 +7,7 @@ import SearchIcon1 from '../../../public/SvgIcon/SearchIcon/SearchIcon1';
 import ProfileIcon1 from '../../../public/SvgIcon/ProfileIcon/ProfileIcon1';
 import ProfileIcon2 from '../../../public/SvgIcon/ProfileIcon/ProfileIcon2';
 import SearchIcon2 from '../../../public/SvgIcon/SearchIcon/SearchIcon2';
+import SalonCard from '../../ReuseComponents/SalonCard/SalonCard';
 
 const HomeScreen: React.FC = () => {
     const insets = useSafeAreaInsets();
@@ -18,7 +19,7 @@ const HomeScreen: React.FC = () => {
             <View style={styles.screen}>
             <Text style={styles.title}>Salon3</Text>
                <View>
-                <Text></Text>
+                <SalonCard/>
                </View>
             </View>
         </ScrollView>
