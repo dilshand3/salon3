@@ -25,9 +25,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
     const insets = useSafeAreaInsets();
 
     return (
-        <View style={[styles.tabBarContainer, {
-            paddingBottom: insets.bottom,
-        }]}>
+        <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom }]}>
             {state.routes.map((route: any, index: number) => {
                 const isFocused = state.index === index;
 
@@ -62,10 +60,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
                         key={route.name}
                         onPress={onPress}
                         activeOpacity={0.8}
-                        style={[
-                            styles.tabItem,
-                            isFocused && styles.activeTab
-                        ]}
+                        style={[styles.tabItem, isFocused && styles.activeTab]}
                     >
                         {getIcon()}
                         {isFocused && (
@@ -108,7 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingVertical: 10,
         borderTopWidth: 0.5,
-        borderColor: '#ccc'
+        borderColor: '#ccc',
     },
     tabItem: {
         flexDirection: 'row',
@@ -116,10 +111,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 14,
         paddingVertical: 5,
         borderRadius: 20,
-        marginBottom: 8
+        marginBottom: 8,
     },
     activeTab: {
-        backgroundColor: '#6950f4',
+        backgroundColor: "#000000",
         borderRadius: 15,
     },
     activeLabel: {

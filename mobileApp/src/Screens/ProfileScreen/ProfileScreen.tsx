@@ -7,10 +7,6 @@ const ProfileScreen : React.FC = () => {
   return (
     <View style={{paddingTop : insets.top}}>
       <Text>ProfileScreen</Text>
-       <StatusBar
-          animated={true}
-          backgroundColor="#61dafb"
-        />
     </View>
   )
 }
